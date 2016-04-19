@@ -22,13 +22,13 @@ class Plugin implements PluginInterface
             $paths = [];
 
             if ($root_package->getName() !== '__root__') {
-                $paths[$root_package->getPrettyName()] = getcwd();
+                $paths[$root_package->getName()] = getcwd();
             }
 
             $packages = $composer->getRepositoryManager()->getLocalRepository()->getPackages();
 
             foreach ($packages as $package) {
-                $name = $package->getPrettyName();
+                $name = $package->getName();
 
                 $paths[$name] = $manager->getInstallPath($package);
 
@@ -47,6 +47,7 @@ class Plugin implements PluginInterface
                     . " */\n"
                     . "function composer_path(\$name) {\n"
                     . "    static \$paths = " . var_export($paths, true) . ";\n\n"
+                    . "    \$name = strtolower(\$name);\n\n"
                     . "    if (!isset(\$paths[\$name])) {\n"
                     . "        throw new RuntimeException('Composer package not found: ' . \$name);\n"
                     . "    }\n\n"
