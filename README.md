@@ -5,6 +5,9 @@ This Composer plugin provides a means of locating the installation path for a gi
 
 Use this to locate vendor package roots, e.g. when working with template files or other assets in a package.
 
+It works regardless of installers affecting the individual package installation paths, and also works whether
+the package in question is currently the root package/project or a dependency.
+
 You can think of this as a minimalist alternative to [puli](https://github.com/puli/repository) - rather than
 abstracting repositories and resources through a complex virtual file system, I prefer to just use the physical
 file system and standard PHP APIs.
