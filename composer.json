@@ -1,0 +1,23 @@
+{
+    "name": "mindplay/composer-locator",
+    "type": "composer-plugin",
+    "description": "Locates Composer package root folders by package name",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "mindplay\\composer_locator\\": "src/"
+        },
+        "files": [
+            "composer_path.func.php"
+        ]
+    },
+    "require": {
+        "composer-plugin-api": "^1"
+    },
+    "require-dev": {
+        "composer/composer": "^1"
+    },
+    "extra": {
+        "class": "mindplay\\composer_locator\\Plugin"
+    }
+}
