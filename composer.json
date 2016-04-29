@@ -5,7 +5,8 @@
     "license": "MIT",
     "autoload": {
         "classmap": [
-            "src/"
+            "src/ComposerLocator.php",
+            "src/Plugin.php"
         ]
     },
     "require": {
