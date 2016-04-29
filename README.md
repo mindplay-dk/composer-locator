@@ -21,19 +21,30 @@ Add to your `composer.json` file:
 ```json
 {
     "require": {
-        "mindplay/composer-locator": "^1"
+        "mindplay/composer-locator": "^2"
     }
 }
 ```
 
-Running `composer install` or `composer update` will bootstrap your project with a simple, global function
-that provides the installation path for a given Composer package name:
+Running `composer install` or `composer update` will bootstrap your project with a generated class containing
+a registry of Composer package installation paths.
+
+To obtain the installation path for given package:
 
 ```php
-$root_path = composer_path("mindplay/composer-locator");
+$path = ComposerLocator::getPath("vendor/package"); // => "/path/to/vendor/package" 
 ```
 
 If the specified package name is not found, the function throws a `RuntimeException`.
+
+To check whether a given package is installed:
+
+```php
+$is_installed = ComposerLocator::isInstalled("vendor/package"); // => (bool) true|false 
+```
+
+You can also get a list of all installed packages via `ComposerLocator::getPackages()`, or obtain the full
+map of vendor/package names to absolute root paths via `ComposerLocator::getPaths()`.
 
 ## Why?
 
