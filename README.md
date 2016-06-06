@@ -45,6 +45,13 @@ To check whether a given package is installed:
 $is_installed = ComposerLocator::isInstalled("vendor/package"); // => (bool) true|false 
 ```
 
+The root project package doesn't necessarily have a package name - in that case, or in other cases where you
+need the project root path, you can obtain it directly:
+
+```php
+$path = ComposerLocator::getRootPath(); // => "/path/to/project/root" 
+```
+
 You can also get a list of all installed packages via `ComposerLocator::getPackages()`, or obtain the full
 map of vendor/package names to absolute root paths via `ComposerLocator::getPaths()`.
 

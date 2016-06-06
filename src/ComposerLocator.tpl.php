@@ -12,6 +12,11 @@ abstract class ComposerLocator
     private static $paths = $PATHS;
 
     /**
+     * @var string absolute Composer project root path
+     */
+    private static $root_path = $ROOT_PATH;
+
+    /**
      * @param string $name Composer vendor/package name
      *
      * @return string absolute root path to package installation folder
@@ -29,6 +34,14 @@ abstract class ComposerLocator
         return self::$paths[$name];
     }
 
+    /**
+     * @return string absolute root path of Composer project
+     */
+    public static function getRootPath()
+    {
+        return self::$root_path;
+    }
+    
     /**
      * @param string $name Composer vendor/package name
      *

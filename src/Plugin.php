@@ -19,12 +19,14 @@ class Plugin implements PluginInterface
 
             $root_package = $composer->getPackage();
 
+            $root_path = getcwd();
+
             $paths = [];
 
             if ($root_package->getName() !== '__root__') {
-                $paths[$root_package->getName()] = getcwd();
+                $paths[$root_package->getName()] = $root_path;
             }
-
+            
             $packages = $composer->getRepositoryManager()->getLocalRepository()->getPackages();
 
             foreach ($packages as $package) {
@@ -43,6 +45,7 @@ class Plugin implements PluginInterface
                     [
                         '$DATE'  => date('Y-m-d H:i:s'),
                         '$PATHS' => preg_replace('/\s+/', " ", var_export($paths, true)),
+                        '$ROOT_PATH' => var_export($root_path, true),
                     ]
                 );
 
