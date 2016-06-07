@@ -24,7 +24,7 @@ class Plugin implements PluginInterface
             $paths = [];
 
             if ($root_package->getName() !== '__root__') {
-                $paths[$root_package->getName()] = $root_path;
+                $paths[$root_package->getName()] = ''; // resolves root package as absolute project root path
             }
             
             $packages = $composer->getRepositoryManager()->getLocalRepository()->getPackages();
@@ -32,7 +32,7 @@ class Plugin implements PluginInterface
             foreach ($packages as $package) {
                 $name = $package->getName();
 
-                $paths[$name] = $manager->getInstallPath($package);
+                $paths[$name] = substr($manager->getInstallPath($package), strlen($root_path));
 
                 if ($name === "mindplay/composer-locator") {
                     $output_path = $manager->getInstallPath($package) . "/src/ComposerLocator.php";
@@ -45,7 +45,6 @@ class Plugin implements PluginInterface
                     [
                         '$DATE'  => date('Y-m-d H:i:s'),
                         '$PATHS' => preg_replace('/\s+/', " ", var_export($paths, true)),
-                        '$ROOT_PATH' => var_export($root_path, true),
                     ]
                 );
 

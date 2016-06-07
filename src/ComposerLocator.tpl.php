@@ -7,14 +7,9 @@
 abstract class ComposerLocator
 {
     /**
-     * @var string[] map where Composer vendor/package name => absolute root path
+     * @var string[] map where Composer vendor/package name => package path (relative to project root path)
      */
     private static $paths = $PATHS;
-
-    /**
-     * @var string absolute Composer project root path
-     */
-    private static $root_path = $ROOT_PATH;
 
     /**
      * @param string $name Composer vendor/package name
@@ -31,7 +26,7 @@ abstract class ComposerLocator
             throw new RuntimeException("Composer package not found: {$name}");
         }
 
-        return self::$paths[$name];
+        return self::getRootPath() . self::$paths[$name];
     }
 
     /**
@@ -39,7 +34,7 @@ abstract class ComposerLocator
      */
     public static function getRootPath()
     {
-        return self::$root_path;
+        return dirname(dirname(dirname(dirname(__DIR__))));
     }
     
     /**
@@ -65,6 +60,12 @@ abstract class ComposerLocator
      */
     public static function getPaths()
     {
-        return self::$paths;
+        $paths = [];
+        
+        foreach (self::$paths as $name => $path) {
+            $paths[$name] = self::getRootPath() . $path;
+        }
+        
+        return $paths;
     }
 }
