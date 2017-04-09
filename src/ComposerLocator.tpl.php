@@ -22,11 +22,11 @@ abstract class ComposerLocator
     {
         $name = strtolower($name);
 
-        if (! isset(self::$paths[$name])) {
+        if (! isset(static::$paths[$name])) {
             throw new RuntimeException("Composer package not found: {$name}");
         }
 
-        return self::getRootPath() . self::$paths[$name];
+        return static::getRootPath() . static::$paths[$name];
     }
 
     /**
@@ -44,7 +44,7 @@ abstract class ComposerLocator
      */
     public static function isInstalled($name)
     {
-        return isset(self::$paths[$name]);
+        return isset(static::$paths[$name]);
     }
 
     /**
@@ -52,7 +52,7 @@ abstract class ComposerLocator
      */
     public static function getPackages()
     {
-        return array_keys(self::$paths);
+        return array_keys(static::$paths);
     }
 
     /**
@@ -62,8 +62,8 @@ abstract class ComposerLocator
     {
         $paths = [];
         
-        foreach (self::$paths as $name => $path) {
-            $paths[$name] = self::getRootPath() . $path;
+        foreach (static::$paths as $name => $path) {
+            $paths[$name] = static::getRootPath() . $path;
         }
         
         return $paths;
