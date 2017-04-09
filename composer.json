@@ -14,7 +14,10 @@
         "composer-plugin-api": "^1"
     },
     "require-dev": {
-        "composer/composer": "^1"
+        "composer/composer": "^1",
+        "mindplay/testies": "^0.3.0",
+        "symfony/filesystem": "^3.2",
+        "symfony/process": "^3.2"
     },
     "extra": {
         "class": "mindplay\\composer_locator\\Plugin"
