@@ -17,7 +17,7 @@
         "composer/composer": "^1",
         "mindplay/testies": "^0.3.0",
         "symfony/filesystem": "^2.7 || ^3.0",
-        "symfony/process": "^3.2"
+        "symfony/process": "^2.7 || ^3.0"
     },
     "extra": {
         "class": "mindplay\\composer_locator\\Plugin"
