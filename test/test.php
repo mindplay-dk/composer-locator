@@ -64,8 +64,10 @@ test(
             $test_process = new Process('php test.inner.php', $PROJECT_DIR);
 
             run_process($test_process);
-        } finally {
+        } catch (Exception $e) {
             $fs->remove("{$PROJECT_DIR}");
+
+            throw $e;
         }
     }
 );
