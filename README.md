@@ -4,6 +4,7 @@ mindplay/composer-locator
 This Composer plugin provides a means of locating the installation path for a given Composer package name.
 
 [![PHP Version](https://img.shields.io/badge/php-5.4%2B-blue.svg)](https://packagist.org/packages/mindplay/composer-locator)
+[![Build Status](https://travis-ci.org/mindplay-dk/composer-locator.svg?branch=master)](https://travis-ci.org/mindplay-dk/composer-locator)
 
 Use this to locate vendor package roots, e.g. when working with template files or other assets in a package.
 
