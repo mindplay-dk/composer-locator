@@ -19,7 +19,7 @@ class Plugin implements PluginInterface
 
             $root_package = $composer->getPackage();
 
-            $root_path = getcwd();
+            $root_path = strtr(getcwd(), '\\', '/');
 
             $paths = [];
 
@@ -32,10 +32,12 @@ class Plugin implements PluginInterface
             foreach ($packages as $package) {
                 $name = $package->getName();
 
-                $paths[$name] = substr($manager->getInstallPath($package), strlen($root_path));
+                $install_path = strtr($manager->getInstallPath($package), '\\', '/');
+
+                $paths[$name] = substr($install_path, strlen($root_path));
 
                 if ($name === "mindplay/composer-locator") {
-                    $output_path = $manager->getInstallPath($package) . "/src/ComposerLocator.php";
+                    $output_path = $install_path . "/src/ComposerLocator.php";
                 }
             }
 

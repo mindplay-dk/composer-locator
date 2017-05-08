@@ -44,9 +44,9 @@ JSON;
 }
 
 test(
-    'something',
+    'run composer integration test-suite',
     function () {
-        $PROJECT_DIR = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        $PROJECT_DIR = realpath(sys_get_temp_dir()) . DIRECTORY_SEPARATOR . uniqid();
 
         echo "Installing to: {$PROJECT_DIR}\n";
 
@@ -69,6 +69,8 @@ test(
 
             throw $e;
         }
+
+        ok(true, "integration test completed without errors");
     }
 );
 
