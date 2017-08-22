@@ -5,7 +5,6 @@ namespace mindplay\composer_locator;
 use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
-use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 
 class Plugin implements PluginInterface
@@ -55,8 +54,6 @@ class Plugin implements PluginInterface
                 $fs->dumpFile($output_path, $content);
 
                 $io->write("<info>" . count($packages) . " package paths dumped</info>");
-            } else {
-                throw new RuntimeException("internal error - failed to enumerate packages");
             }
         };
 
