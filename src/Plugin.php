@@ -34,7 +34,12 @@ class Plugin implements PluginInterface
 
                 $install_path = strtr($manager->getInstallPath($package), '\\', '/');
 
-                $paths[$name] = substr($install_path, strlen($root_path));
+                if (file_exists(__DIR__ . '/' . $install_path)) {
+                  $paths[$name] = substr($install_path, strlen($root_path));
+                }
+                else {
+                  $paths[$name] = $install_path;
+                }
 
                 if ($name === "mindplay/composer-locator") {
                     $output_path = $install_path . "/src/ComposerLocator.php";
