@@ -35,12 +35,12 @@ class Plugin implements PluginInterface
                 $install_path = strtr($manager->getInstallPath($package), '\\', '/');
 
                 if (file_exists($root_path . '/' . $install_path)) {
-                  // Some installers work on relative paths, apply as-is.
-                  $paths[$name] = "/$install_path";
+                    // Some installers work on relative paths, apply as-is.
+                    $paths[$name] = "/$install_path";
                 }
                 else {
-                  // Some installers work on absolute paths, remove the root path.
-                  $paths[$name] = substr($install_path, strlen($root_path));
+                    // Some installers work on absolute paths, remove the root path.
+                    $paths[$name] = substr($install_path, strlen($root_path));
                 }
 
                 if ($name === "mindplay/composer-locator") {
