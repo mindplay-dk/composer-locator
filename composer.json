@@ -22,5 +22,5 @@
     "extra": {
         "class": "mindplay\\composer_locator\\Plugin"
     },
-    "bin": ["bin/locate-package"]
+    "bin": ["locate-package"]
 }
