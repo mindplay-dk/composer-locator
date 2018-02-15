@@ -1,11 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-/**
- * if we're running from phar load the phar autoload,
- * else let the script 'robo' search for the autoloader
- */
-
 foreach (array(__DIR__ . '/../../../autoload.php', __DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
     if (file_exists($file)) {
         require_once $file;
@@ -13,8 +8,9 @@ foreach (array(__DIR__ . '/../../../autoload.php', __DIR__ . '/../../autoload.ph
     }
 }
 
-$path = ComposerLocator::getPath("drupal/workbench_moderation");
+if (!isset($argv[1])) {
+    throw new RuntimeException('Pass a Composer package name as the first argument.');
+}
 
-print $path;
-
-
+$path = ComposerLocator::getPath($argv[1]);
+fwrite(STDOUT, $path);
