@@ -26,7 +26,6 @@ jobs:
           - 7.3
           - 7.4
         os:
-          - windows-latest
           - ubuntu-latest
           - macOS-latest
         composer:
@@ -47,7 +46,7 @@ jobs:
       - name: Check PHP Version
         run: php -v
       - name: Check Composer Version
-        run: composer -v
+        run: composer --version
       - name: Checkout
         uses: actions/checkout@master
       - name: Composer install
