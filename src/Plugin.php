@@ -63,4 +63,14 @@ class Plugin implements PluginInterface
         $composer->getEventDispatcher()->addListener("post-install-cmd", $dump_package_map);
         $composer->getEventDispatcher()->addListener("post-update-cmd", $dump_package_map);
     }
+
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+        // At the moment empty; needed for composer 2.x support
+    }
+
+    public function uninstall(Composer $composer, IOInterface $io)
+    {
+        // At the moment empty; needed for composer 2.x support
+    }
 }
