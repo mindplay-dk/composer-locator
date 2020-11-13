@@ -1,0 +1,51 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+      - improvement/use-github-actions-for-tests-instead-of-travis
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  run:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 2
+      matrix:
+        composer:
+#          - 2
+          - 1
+        os:
+          - ubuntu-latest
+#          - windows-latest
+#          - macOS-latest
+        php:
+          - 5.4
+          - 5.5
+          - 5.6
+          - 7.0
+          - 7.1
+          - 7.2
+          - 7.3
+          - 7.4
+          - 8.0
+    name: PHP ${{ matrix.php }}; Composer v${{ matrix.composer }}; ${{ matrix.os }}
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, json, mbstring, pcre
+          ini-values: memory_limit=512M
+          tools: composer:v${{ matrix.composer }}
+      - name: Check PHP Version
+        run: php -v
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Composer install
+        run: composer install --dev --prefer-source
+      - name: Do tests...
+        run: php test/test.php
