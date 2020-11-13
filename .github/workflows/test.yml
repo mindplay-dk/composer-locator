@@ -15,13 +15,6 @@ jobs:
     strategy:
       max-parallel: 2
       matrix:
-        composer:
-          - 1
-          #- 2
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macOS-latest
         php:
           - 8.0
           - 5.4
@@ -32,6 +25,13 @@ jobs:
           - 7.2
           - 7.3
           - 7.4
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macOS-latest
+        composer:
+          - 1
+          - 2
         exclude:
           - php: 8.0
             composer: 1
@@ -46,9 +46,11 @@ jobs:
           tools: composer:v${{ matrix.composer }}
       - name: Check PHP Version
         run: php -v
+      - name: Check Composer Version
+        run: composer -v
       - name: Checkout
         uses: actions/checkout@master
       - name: Composer install
-        run: composer install --dev --prefer-source
+        run: composer install --prefer-source
       - name: Do tests...
         run: php test/test.php
