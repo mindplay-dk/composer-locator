@@ -11,10 +11,10 @@
     },
     "require": {
         "php": ">= 5.4",
-        "composer-plugin-api": "^1"
+        "composer-plugin-api": "^1.0 || ^2.0"
     },
     "require-dev": {
-        "composer/composer": "^1",
+        "composer/composer": "^1.0 || ^2.0",
         "mindplay/testies": "^0.3.0",
         "symfony/filesystem": "^2.7 || ^3.0",
         "symfony/process": "^2.7 || ^3.0"
