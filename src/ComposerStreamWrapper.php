@@ -4,6 +4,8 @@ namespace mindplay\composer_locator;
 
 use ComposerLocator;
 
+use const SORT_STRING;
+
 class ComposerStreamWrapper
 {
     /**
@@ -179,6 +181,8 @@ class ComposerStreamWrapper
             while (false !== ($path = readdir($dir))) {
                 $this->dir[] = $path;
             }
+
+            sort($this->dir, SORT_STRING);
 
             return true;
         }
