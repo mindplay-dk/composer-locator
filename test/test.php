@@ -35,7 +35,7 @@ function create_composer_json($package_dir)
     ],
     "require":{
         "mindplay/testies": "^0.3.0",
-        "mindplay/composer-locator": "dev-master"
+        "mindplay/composer-locator": "*@dev"
     }
 }
 JSON;
@@ -57,7 +57,7 @@ test(
         try {
             $fs->dumpFile("{$PROJECT_DIR}/composer.json", create_composer_json($PACKAGE_DIR));
 
-            run_process(Process::fromShellCommandline('composer install', $PROJECT_DIR));
+            run_process(Process::fromShellCommandline('composer update', $PROJECT_DIR));
 
             $fs->copy(__DIR__ . "/test.inner.php", "{$PROJECT_DIR}/test.inner.php");
 
