@@ -5,6 +5,95 @@
 require __DIR__ . '/vendor/autoload.php';
 
 test(
+    'can open files via stream-wrapper',
+    function () {
+        eq(
+            file_get_contents("composer://mindplay/composer-locator/test/assets/a.txt"),
+            "A",
+            "can read contents of files in installed Composer packages"
+        );
+    }
+);
+
+test(
+    'can read directories via stream-wrapper',
+    function () {
+        $dir = opendir("composer://mindplay/composer-locator/test/assets");
+
+        eq(readdir($dir), ".");
+        eq(readdir($dir), "..");
+        eq(readdir($dir), "a.txt");
+        eq(readdir($dir), "b.txt");
+        eq(readdir($dir), false);
+
+        closedir($dir);
+    }
+);
+
+test(
+    'can read vendor-names as directories via stream-wrapper',
+    function () {
+        $dir = opendir("composer://");
+
+        eq(readdir($dir), ".");
+        eq(readdir($dir), "..");
+        eq(readdir($dir), "mindplay");
+        eq(readdir($dir), false);
+
+        closedir($dir);
+    }
+);
+
+test(
+    'can read vendor/package-names as directories via stream-wrapper',
+    function () {
+        $dir = opendir("composer://mindplay");
+
+        eq(readdir($dir), ".");
+        eq(readdir($dir), "..");
+        eq(readdir($dir), "composer-locator");
+        eq(readdir($dir), "testies");
+        eq(readdir($dir), false);
+
+        closedir($dir);
+    }
+);
+
+test(
+    'can iterate through vendors/packages/files via stream-wrapper',
+    function () {
+        $iterator = new RecursiveDirectoryIterator("composer://");
+        $iterator = new RecursiveIteratorIterator($iterator);
+        $iterator = new RegexIterator($iterator, '/.*\/composer\.json$/');
+        
+        $found = iterator_to_array($iterator);
+
+        ok($found["composer://mindplay/composer-locator/composer.json"] instanceof SplFileInfo);
+        ok($found["composer://mindplay/testies/composer.json"] instanceof SplFileInfo);
+    }
+);
+
+/*
+
+// NOTE: so this is pretty disappointing: glob() does not support stream wrappers, at all.
+
+test(
+    'can read directories via stream-wrapper',
+    function () {
+        eq(
+            glob("composer://mindplay/composer-locator/test/assets/*.txt"),
+            [
+                "composer://mindplay/composer-locator/test/assets/a.txt",
+                "composer://mindplay/composer-locator/test/assets/b.txt"
+            ],
+            "can list contents of directories in installed Composer packages"
+        );
+    }
+);
+
+*/
+
+test(
     'can check if packages are installed',
     function () {
         eq(ComposerLocator::isInstalled('mindplay/composer-locator'), true);

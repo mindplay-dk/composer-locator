@@ -17,7 +17,7 @@ file system and standard PHP APIs.
 
 Works for me. I like simple things. YMMV.
 
-### Usage
+### Installation
 
 Add to your `composer.json` file:
 
@@ -29,8 +29,43 @@ Add to your `composer.json` file:
 }
 ```
 
-Running `composer install` or `composer update` will bootstrap your project with a generated class containing
-a registry of Composer package installation paths.
+Running `composer install` or `composer update` will bootstrap your project with a stream-wrapper, and a
+generated class containing a registry of Composer package installation paths.
+
+### Stream Wrapper
+
+The package registers a `composer://` stream-wrapper, which means you can use all the standard PHP file
+functions (or any library that uses those) without adding any explicit dependencies to your code - the
+package merely has to be installed and this will work "out of the box", e.g. with template engines or
+most other libraries that accept paths.
+
+The stream-wrapper emulates a file-system organized by vendors and packages, which means you can open
+files from any installed Composer package - for example:
+
+```php
+echo file_get_contents("composer://mindplay/composer-locator/README.md");
+```
+
+Directory traversal all the way from the `composer://` root is supported - so, for example, to locate
+all the `README` files in all the folders of all installed packages, you can do this:
+
+```php
+$iterator = new RecursiveDirectoryIterator("composer://");
+$iterator = new RecursiveIteratorIterator($iterator);
+$iterator = new RegexIterator($iterator, '/.*\/README\.(md|txt)$/');
+
+foreach ($iterator as $file) {
+    echo $file->getPathname() . "\n";
+}
+```
+
+Functions like `fopen` and `opendir` etc. are all supported - the only notable exception is `glob`, which
+relies on native file-system access and does not support any stream-wrappers.
+
+Note that, while the stream-wrapper doesn't prevent you from creating or opening files in write-mode,
+writing to package folders is generally a very bad idea.
+
+### API
 
 To obtain the installation path for given package:
 

@@ -4,8 +4,12 @@
     "description": "Locates Composer package root folders by package name",
     "license": "MIT",
     "autoload": {
+        "files": [
+            "src/init.php"
+        ],
         "classmap": [
             "src/ComposerLocator.php",
+            "src/ComposerStreamWrapper.php",
             "src/Plugin.php"
         ]
     },
