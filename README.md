@@ -67,7 +67,12 @@ writing to package folders is generally a very bad idea.
 
 ### API
 
-To obtain the installation path for given package:
+Using the API is completely optional - if you use the stream-wrapper, you don't need to concern yourself
+with local file-system paths to begin with. Anything else you can do with the API can be done with the
+stream-wrapper - for example, instead of `ComposerLocator::isInstalled("vendor/package")`, you can use
+`is_dir("composer://vendor/package")`.
+
+To obtain the installation path for a given package:
 
 ```php
 $path = ComposerLocator::getPath("vendor/package"); // => "/path/to/vendor/package" 
