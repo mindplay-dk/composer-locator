@@ -126,9 +126,25 @@ class ComposerStreamWrapper
             ];
         }
 
-        return 1 === preg_match(self::PARTIAL_PATH_PATTERN, $path, $matches)
-            ? $virtual_node_stat
-            : stat($this->resolvePath($path));
+        if (1 === preg_match(self::PARTIAL_PATH_PATTERN, $path, $matches)) {
+            $vendor = $matches['vendor'];
+
+            if ($vendor ? in_array($vendor, self::getVendors()) : true) {
+                return $virtual_node_stat;
+            }
+        }
+
+        $file_path = self::resolvePath($path);
+
+        if (file_exists($file_path)) {
+            return stat($file_path);
+        }
+
+        if (($flags & STREAM_URL_STAT_QUIET) === 0) {
+            trigger_error("[ComposerLocator] path not found: ${path}", E_USER_WARNING);
+        }
+
+        return false;
     }
     
     /**
@@ -155,25 +171,13 @@ class ComposerStreamWrapper
 
                 $this->dir = $dir;
             } else {
-                static $vendors;
-                
-                if (is_null($vendors)) {
-                    $vendors = [".", ".."];
-
-                    foreach (ComposerLocator::getPackages() as $package) {
-                        $vendors[] = substr($package, 0, stripos($package, "/"));
-                    }
-
-                    $vendors = array_unique($vendors);
-                }
-
-                $this->dir = $vendors;
+                $this->dir = array_merge([".", ".."], self::getVendors());
             }
 
             return true;
         }
 
-        $dir = opendir($this->resolvePath($path));
+        $dir = opendir(self::resolvePath($path));
 
         if (is_resource($dir)) {
             $this->dir = [];
@@ -240,12 +244,36 @@ class ComposerStreamWrapper
      * 
      * @return string|null resolved path (or null, if the path could not be resolved)
      */
-    private function resolvePath($path)
+    private static function resolvePath($path)
     {
         if (1 === preg_match(self::PACKAGE_PATH_PATTERN, $path, $matches)) {
-            $dir = ComposerLocator::getPath($matches["package"]);
+            $package = $matches["package"];
 
-            return $dir . $matches["path"];
+            if (ComposerLocator::isInstalled($package)) {
+                $dir = ComposerLocator::getPath($package);
+
+                return $dir . $matches["path"];
+            }
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function getVendors()
+    {
+        static $vendors;
+                
+        if (is_null($vendors)) {
+            $vendors = [];
+
+            foreach (ComposerLocator::getPackages() as $package) {
+                $vendors[] = substr($package, 0, stripos($package, "/"));
+            }
+
+            $vendors = array_unique($vendors);
+        }
+
+        return $vendors;
     }
 }

@@ -73,6 +73,20 @@ test(
     }
 );
 
+test(
+    'can check if vendors/package/file paths exist via stream-wrapper',
+    function () {
+        ok(is_dir("composer://"));
+        ok(is_dir("composer://mindplay"));
+        ok(is_dir("composer://mindplay/composer-locator"));
+        ok(is_file("composer://mindplay/composer-locator/README.md"));
+
+        ok(! file_exists("composer://foo"));
+        ok(! file_exists("composer://mindplay/foo"));
+        ok(! file_exists("composer://mindplay/composer-locator/foo"));
+    }
+);
+
 /*
 
 // NOTE: so this is pretty disappointing: glob() does not support stream wrappers, at all.
