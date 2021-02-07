@@ -4,20 +4,24 @@
     "description": "Locates Composer package root folders by package name",
     "license": "MIT",
     "autoload": {
+        "files": [
+            "src/init.php"
+        ],
         "classmap": [
             "src/ComposerLocator.php",
+            "src/ComposerStreamWrapper.php",
             "src/Plugin.php"
         ]
     },
     "require": {
-        "php": ">= 5.4",
+        "php": "^7.2 || ^8.0",
         "composer-plugin-api": "^1.0 || ^2.0"
     },
     "require-dev": {
         "composer/composer": "^1.0 || ^2.0",
         "mindplay/testies": "^0.3.0",
-        "symfony/filesystem": "^2.7 || ^3.0",
-        "symfony/process": "^2.7 || ^3.0"
+        "symfony/filesystem": "^5.2.3",
+        "symfony/process": "^5.2.3"
     },
     "extra": {
         "class": "mindplay\\composer_locator\\Plugin"

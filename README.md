@@ -3,7 +3,7 @@ mindplay/composer-locator
 
 This Composer plugin provides a means of locating the installation path for a given Composer package name.
 
-[![PHP Version](https://img.shields.io/badge/php-5.4%2B-blue.svg)](https://packagist.org/packages/mindplay/composer-locator)
+[![PHP Version](https://img.shields.io/badge/php-7.2%2B-blue.svg)](https://packagist.org/packages/mindplay/composer-locator)
 [![Build Status](https://travis-ci.org/mindplay-dk/composer-locator.svg?branch=master)](https://travis-ci.org/mindplay-dk/composer-locator)
 
 Use this to locate vendor package roots, e.g. when working with template files or other assets in a package.
@@ -17,7 +17,7 @@ file system and standard PHP APIs.
 
 Works for me. I like simple things. YMMV.
 
-### Usage
+### Installation
 
 Add to your `composer.json` file:
 
@@ -29,10 +29,50 @@ Add to your `composer.json` file:
 }
 ```
 
-Running `composer install` or `composer update` will bootstrap your project with a generated class containing
-a registry of Composer package installation paths.
+Running `composer install` or `composer update` will bootstrap your project with a stream-wrapper, and a
+generated class containing a registry of Composer package installation paths.
 
-To obtain the installation path for given package:
+### Stream Wrapper
+
+The package registers a `composer://` stream-wrapper, which means you can use all the standard PHP file
+functions (or any library that uses those) without adding any explicit dependencies to your code - the
+package merely has to be installed and this will work "out of the box", e.g. with template engines or
+most other libraries that accept paths.
+
+The stream-wrapper emulates a file-system organized by vendors and packages, which means you can open
+files from any installed Composer package - for example:
+
+```php
+echo file_get_contents("composer://mindplay/composer-locator/README.md");
+```
+
+Directory traversal all the way from the `composer://` root is supported - so, for example, to locate
+all the `README` files in all the folders of all installed packages, you can do this:
+
+```php
+$iterator = new RecursiveDirectoryIterator("composer://");
+$iterator = new RecursiveIteratorIterator($iterator);
+$iterator = new RegexIterator($iterator, '/.*\/README\.(md|txt)$/');
+
+foreach ($iterator as $file) {
+    echo $file->getPathname() . "\n";
+}
+```
+
+Functions like `fopen` and `opendir` etc. are all supported - the only notable exception is `glob`, which
+relies on native file-system access and does not support any stream-wrappers.
+
+Note that, while the stream-wrapper doesn't prevent you from creating or opening files in write-mode,
+writing to package folders is generally a very bad idea.
+
+### API
+
+Using the API is completely optional - if you use the stream-wrapper, you don't need to concern yourself
+with local file-system paths to begin with. Anything else you can do with the API can be done with the
+stream-wrapper - for example, instead of `ComposerLocator::isInstalled("vendor/package")`, you can use
+`is_dir("composer://vendor/package")`.
+
+To obtain the installation path for a given package:
 
 ```php
 $path = ComposerLocator::getPath("vendor/package"); // => "/path/to/vendor/package" 
