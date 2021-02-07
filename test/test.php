@@ -57,11 +57,11 @@ test(
         try {
             $fs->dumpFile("{$PROJECT_DIR}/composer.json", create_composer_json($PACKAGE_DIR));
 
-            run_process(new Process('composer install', $PROJECT_DIR));
+            run_process(Process::fromShellCommandline('composer install', $PROJECT_DIR));
 
             $fs->copy(__DIR__ . "/test.inner.php", "{$PROJECT_DIR}/test.inner.php");
 
-            $test_process = new Process('php test.inner.php', $PROJECT_DIR);
+            $test_process = Process::fromShellCommandline('php test.inner.php', $PROJECT_DIR);
 
             run_process($test_process);
         } catch (Exception $e) {
