@@ -7,11 +7,13 @@ require __DIR__ . '/vendor/autoload.php';
 test(
     'can open files via stream-wrapper',
     function () {
-        eq(
-            file_get_contents("composer://mindplay/composer-locator/test/assets/a.txt"),
-            "A",
-            "can read contents of files in installed Composer packages"
-        );
+        $file = fopen("composer://mindplay/composer-locator/test/assets/a.txt", "r");
+
+        ok(is_resource($file), "can open file in installed Composer package");
+
+        eq(stream_get_contents($file), "A", "can read contents of files in installed Composer packages");
+
+        ok(fclose($file), "can close file");
     }
 );
 
@@ -76,14 +78,35 @@ test(
 test(
     'can check if vendors/package/file paths exist via stream-wrapper',
     function () {
-        ok(is_dir("composer://"));
-        ok(is_dir("composer://mindplay"));
-        ok(is_dir("composer://mindplay/composer-locator"));
-        ok(is_file("composer://mindplay/composer-locator/README.md"));
+        ok(is_dir("composer://"), "vendor root exists");
+        ok(is_dir("composer://mindplay"), "vendor exists");
+        ok(is_dir("composer://mindplay/composer-locator"), "package exists");
+        ok(is_file("composer://mindplay/composer-locator/README.md"), "file in package exists");
 
-        ok(! file_exists("composer://foo"));
-        ok(! file_exists("composer://mindplay/foo"));
-        ok(! file_exists("composer://mindplay/composer-locator/foo"));
+        ok(! file_exists("composer://foo"), "vendor does not exist");
+        ok(! file_exists("composer://mindplay/foo"), "package does not exist");
+        ok(! file_exists("composer://mindplay/composer-locator/foo"), "file in package does not exist");
+    }
+);
+
+test(
+    'stream-wrapper prevents opening of non-existent files',
+    function () {
+        ok(false === fopen("composer://foo", "r"), "vendor does not exist");
+        ok(false === fopen("composer://mindplay/foo", "r"), "package does not exist");
+        ok(false === fopen("composer://mindplay/composer-locator/foo", "r"), "file in package does not exist");
+    }
+);
+
+test(
+    'stream-wrapper resources should not be writable',
+    function () {
+        ok(! is_writable("composer://"));
+        ok(! is_writable("composer://mindplay"));
+        ok(! is_writable("composer://mindplay/composer-locator"));
+        ok(! is_writable("composer://mindplay/composer-locator/README.md"));
+
+        ok(false === fopen("composer://mindplay/composer-locator/README.md", "w"), "cannot open file for writing");
     }
 );
 
@@ -166,5 +189,7 @@ test(
         ok(is_dir($paths['mindplay/testies']));
     }
 );
+
+configure()->disableErrorHandler(); // stream-wrappers may trigger errors
 
 exit(run());

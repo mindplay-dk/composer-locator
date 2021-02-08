@@ -45,16 +45,34 @@ class ComposerStreamWrapper
      */
     public function stream_open($path, $mode, $options, &$opened_path)
     {
+        if ($mode !== "r" && $mode !== "rb") {
+            return false;
+        }
+
         if (1 === preg_match('/^[^\:]+:\/\/(?\'package\'[^\/]+\/[^\/]+)(?\'path\'.*)/', $path, $matches)) {
-            $dir = ComposerLocator::getPath($matches["package"]);
+            $package = $matches["package"];
 
-            $opened_path = $dir . $matches["path"];
+            if (! ComposerLocator::isInstalled($package)) {
+                return false;
+            }
 
-            $this->path = $opened_path;
+            $dir = ComposerLocator::getPath($package);
 
-            $this->resource = fopen($this->path, $mode);
+            $local_path = $dir . $matches["path"];
 
-            return true;
+            if (is_file($local_path)) {
+                $this->path = $local_path;
+
+                $this->resource = fopen($this->path, $mode);
+
+                $opened_path = $this->path;
+
+                return true;
+            }
+        }
+
+        if (($options & STREAM_REPORT_ERRORS) !== 0) {
+            trigger_error("[ComposerLocator] path not found: {$path}", E_USER_WARNING);
         }
 
         return false;
@@ -104,7 +122,7 @@ class ComposerStreamWrapper
 
         if (is_null($virtual_node_stat)) {
             $root = ComposerLocator::getRootPath();
-            $mode = 040444; // read-only directory
+            $mode = 0040444; // read-only directory (see https://www.php.net/manual/en/function.stat.php)
             $atime = fileatime($root);
             $mtime = filemtime($root);
             $ctime = filectime($root);
@@ -137,7 +155,14 @@ class ComposerStreamWrapper
         $file_path = self::resolvePath($path);
 
         if (file_exists($file_path)) {
-            return stat($file_path);
+            $stat = stat($file_path);
+
+            // NOTE: removing write-permissions, so: read + execute = 4 + 1 = 5
+            //       see https://www.php.net/manual/en/function.stat.php
+
+            $stat[2] = $stat["mode"] = ($stat["mode"] & 07777555);
+
+            return $stat;
         }
 
         if (($flags & STREAM_URL_STAT_QUIET) === 0) {
