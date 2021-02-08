@@ -6,18 +6,6 @@ use Symfony\Component\Process\Process;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-/**
- * @param Process $process
- */
-function run_process($process)
-{
-    $process->run();
-
-    if (! $process->isSuccessful()) {
-        throw new ProcessFailedException($process);
-    }
-}
-
 function create_composer_json($package_dir)
 {
     $package_dir = json_encode($package_dir);
@@ -57,13 +45,11 @@ test(
         try {
             $fs->dumpFile("{$PROJECT_DIR}/composer.json", create_composer_json($PACKAGE_DIR));
 
-            run_process(Process::fromShellCommandline('composer update', $PROJECT_DIR));
+            Process::fromShellCommandline('composer update', $PROJECT_DIR)->mustRun();
 
             $fs->copy(__DIR__ . "/test.inner.php", "{$PROJECT_DIR}/test.inner.php");
 
-            $test_process = Process::fromShellCommandline('php test.inner.php', $PROJECT_DIR);
-
-            run_process($test_process);
+            Process::fromShellCommandline('php test.inner.php', $PROJECT_DIR)->mustRun();
         } catch (Exception $e) {
             $fs->remove("{$PROJECT_DIR}");
 
