@@ -4,6 +4,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
+use function mindplay\testies\{ test, ok, run };
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 /**
@@ -34,8 +36,13 @@ function create_composer_json($package_dir)
         }
     ],
     "require":{
-        "mindplay/testies": "^0.3.0",
+        "mindplay/testies": "^1.0",
         "mindplay/composer-locator": "dev-master"
+    },
+    "config": {
+        "allow-plugins": {
+            "mindplay/composer-locator": true
+        }
     }
 }
 JSON;
@@ -57,11 +64,11 @@ test(
         try {
             $fs->dumpFile("{$PROJECT_DIR}/composer.json", create_composer_json($PACKAGE_DIR));
 
-            run_process(new Process('composer install', $PROJECT_DIR));
+            run_process(new Process(["composer", "install"], $PROJECT_DIR));
 
             $fs->copy(__DIR__ . "/test.inner.php", "{$PROJECT_DIR}/test.inner.php");
 
-            $test_process = new Process('php test.inner.php', $PROJECT_DIR);
+            $test_process = new Process(["php", "test.inner.php"], $PROJECT_DIR);
 
             run_process($test_process);
         } catch (Exception $e) {

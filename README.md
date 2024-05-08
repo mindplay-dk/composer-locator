@@ -25,6 +25,11 @@ Add to your `composer.json` file:
 {
     "require": {
         "mindplay/composer-locator": "^2"
+    },
+    "config": {
+        "allow-plugins": {
+            "mindplay/composer-locator": true
+        }
     }
 }
 ```

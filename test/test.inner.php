@@ -1,5 +1,7 @@
 <?php
 
+use function mindplay\testies\{ test, eq, ok, run };
+
 // NOTE: this is the "internal" test-suite, which gets installed by the "front" test-suite
 
 require __DIR__ . '/vendor/autoload.php';
