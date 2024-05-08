@@ -37,8 +37,9 @@ function create_composer_json($package_dir)
     ],
     "require":{
         "mindplay/testies": "^1.0",
-        "mindplay/composer-locator": "dev-master"
+        "mindplay/composer-locator": "*"
     },
+    "minimum-stability": "dev",
     "config": {
         "allow-plugins": {
             "mindplay/composer-locator": true
