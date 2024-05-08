@@ -1,5 +1,7 @@
 # mindplay/composer-locator
 
+### ⚠️ DEPRECATED: use [Composer Runtime Utilities](https://getcomposer.org/doc/07-runtime.md)
+
 This Composer plugin provides a means of locating the installation path for a given Composer package name.
 
 [![PHP Version](https://img.shields.io/badge/php-7.3_--_8.3%2B-blue.svg)](https://packagist.org/packages/mindplay/composer-locator)

@@ -17,6 +17,9 @@ abstract class ComposerLocator
      * @return string absolute root path to package installation folder
      *
      * @throws RuntimeException if the specific package is not installed
+     * 
+     * @deprecated in favor of composer-runtime-api
+     * @link https://getcomposer.org/doc/07-runtime.md#knowing-the-path-in-which-a-package-is-installed
      */
     public static function getPath(string $name): string
     {
@@ -31,6 +34,9 @@ abstract class ComposerLocator
 
     /**
      * @return string absolute root path of Composer project
+     * 
+     * @deprecated in favor of composer-runtime-api: give your package a name and use `\Composer\InstalledVersions::getInstallPath('vendor/package')` instead
+     * @link https://getcomposer.org/doc/07-runtime.md#knowing-the-path-in-which-a-package-is-installed
      */
     public static function getRootPath(): string
     {
@@ -41,6 +47,9 @@ abstract class ComposerLocator
      * @param string $name Composer vendor/package name
      *
      * @return bool true, if the given package is installed
+     * 
+     * @deprecated in favor of composer-runtime-api
+     * @link https://getcomposer.org/doc/07-runtime.md#knowing-whether-package-x-or-virtual-package-is-present
      */
     public static function isInstalled(string $name): bool
     {
@@ -49,6 +58,9 @@ abstract class ComposerLocator
 
     /**
      * @return string[] list of "vendor/package" names
+     * 
+     * @deprecated in favor of composer-runtime-api: use e.g. `\Composer\InstalledVersions::getInstalledPackagesByType('library')` instead
+     * @link https://getcomposer.org/doc/07-runtime.md#knowing-which-packages-of-a-given-type-are-installed
      */
     public static function getPackages(): array
     {
@@ -57,6 +69,9 @@ abstract class ComposerLocator
 
     /**
      * @return array<string,string> map where Composer vendor/package name => absolute root path
+     * 
+     * @deprecated in favor of composer-runtime-api: use e.g. `\Composer\InstalledVersions::getInstalledPackagesByType('library')` instead
+     * @link https://getcomposer.org/doc/07-runtime.md#knowing-which-packages-of-a-given-type-are-installed
      */
     public static function getPaths(): array
     {
