@@ -45,15 +45,15 @@ To check whether a given package is installed:
 $is_installed = ComposerLocator::isInstalled("vendor/package"); // => (bool) true|false 
 ```
 
-The root project package doesn't necessarily have a package name - in that case, or in other cases where you
-need the project root path, you can obtain it directly:
+The root Composer project package doesn't necessarily have a package name - to get the root path
+of the root Composer project, without specifying the package name:
 
 ```php
 $path = ComposerLocator::getRootPath(); // => "/path/to/project/root" 
 ```
 
-You can also get a list of all installed packages via `ComposerLocator::getPackages()`, or obtain the full
-map of vendor/package names to absolute root paths via `ComposerLocator::getPaths()`.
+You can also get a list of all installed packages via `ComposerLocator::getPackages()`, or obtain a full
+key/value map of package-names to absolute root paths via `ComposerLocator::getPaths()`.
 
 ## Why?
 
@@ -63,12 +63,12 @@ you need to specify paths to template files or other assets.
 The problem is that Composer itself offers no simple and reliable way to do that.
 
 You can use reflection to get the path to a known class or interface from the package, and then `dirname()` up
-from your `src` folder to the package installation root, but that approach is pretty clumsy and creates random
-dependencies on arbitrary class/interface-names, just for the sake of locating a package root.
+from your `src` folder to the package installation root, but that approach isn't very robust, since the location
+of a class file may change from one version to another.
 
 Even if you know the path of the vendor root folder, and the `{vendor}/{package}` folder name convention, there
 is no guarantee that's always where packages are installed - something like [composer-installers](https://github.com/composer/installers)
-or other [custom installers](https://github.com/akimsko/courier) could affect the installation paths.
+could affect the installation paths.
 
-Also, under test, when a package is the root/project package, of course the assumption about the vendor folder
-is always going to be wrong.
+Also, when developing a library, during testing and development, the package will be installed as the root/project
+package, but this path will be different when it's installed as a dependency in another project.
