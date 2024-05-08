@@ -7,7 +7,7 @@
 abstract class ComposerLocator
 {
     /**
-     * @var string[] map where Composer vendor/package name => package path (relative to project root path)
+     * @var array<string,string> map where Composer vendor/package name => package path (relative to project root path)
      */
     private static $paths = $PATHS;
 
@@ -18,7 +18,7 @@ abstract class ComposerLocator
      *
      * @throws RuntimeException if the specific package is not installed
      */
-    public static function getPath($name)
+    public static function getPath(string $name): string
     {
         $name = strtolower($name);
 
@@ -32,9 +32,9 @@ abstract class ComposerLocator
     /**
      * @return string absolute root path of Composer project
      */
-    public static function getRootPath()
+    public static function getRootPath(): string
     {
-        return dirname(dirname(dirname(dirname(__DIR__))));
+        return dirname(__DIR__, 4);
     }
     
     /**
@@ -42,7 +42,7 @@ abstract class ComposerLocator
      *
      * @return bool true, if the given package is installed
      */
-    public static function isInstalled($name)
+    public static function isInstalled(string $name): bool
     {
         return isset(static::$paths[$name]);
     }
@@ -50,15 +50,15 @@ abstract class ComposerLocator
     /**
      * @return string[] list of "vendor/package" names
      */
-    public static function getPackages()
+    public static function getPackages(): array
     {
         return array_keys(static::$paths);
     }
 
     /**
-     * @return string[] map where Composer vendor/package name => absolute root path
+     * @return array<string,string> map where Composer vendor/package name => absolute root path
      */
-    public static function getPaths()
+    public static function getPaths(): array
     {
         $paths = [];
         
